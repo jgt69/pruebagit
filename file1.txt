@@ -1,1 +1,2 @@
 Mi primer fichero gestionado con GIT
+Metemos una línea más
