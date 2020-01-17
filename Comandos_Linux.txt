@@ -1,0 +1,275 @@
+
+** Cambiar contraseña usuario
+
+sudo passwd <user>
+
+Ejemplo: sudo passwd root
+
+** Cambiar a otro usuario
+
+sudo su - <user>
+
+Ejemplo: sudo su - root
+
+Para salir logout
+
+** Visualizar contenido archivos
+
+more
+less
+cat
+tail
+head
+
+** Manejo de archivos
+
+ls
+cd (con cd - puedes moverte entre dos directorios)
+pwd
+mkdir
+cp 
+rm / rmdir
+mv
+
+wc -l (cuenta el número de líneas de un fichero)
+
+ls /etc | wc -l (lista el número de líneas de la salida del comando ls)
+
+nl (numera las líneas)
+
+ls /etc | nl 
+
+** Crear y Editar contenido archivos
+
+touch (cambia el timestamp)
+nano
+pico
+vi / vim
+
+** Permisos y usuarios
+
+chmod
+chown
+useradd
+groupadd
+
+** Alias 
+
+alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
+alias egrep='egrep --color=auto'
+alias fgrep='fgrep --color=auto'
+alias grep='grep --color=auto'
+alias l='ls -CF'
+alias la='ls -A'
+alias ll='ls -alF'
+alias ls='ls --color=auto'
+
+** Crear nuevo alias persistente en .bashrc
+
+echo "alias lf='ls -ahlF --group-directory-first'" >> .bashrc
+
+Cerrar terminal para que cargue los cambios o ejecutar source .bashrc
+
+** Historial de comandos
+
+history
+!<id history> --> ejecuta el/los comando/s del id indicado Ejemplo: !344 
+
+**Wildcars 
+Nos sirve para manipular múltiples ficheros al mismo tiempo. 
+Principalmente se utilizan: * , ? , [ abc ] [ 1–10] , ! 
+“*” Sustituye a cualquier número o carácter. 
+“?” Sustituye a un único carácter. 
+“[ characters ]” coincidencia con cualquiera de los caracteres mostrados. 
+“[num1-num2]” coincidencia con un rango de valores. 
+“[! characters ]” coincidencia con ninguno de los caracteres mostrados.
+
+
+** Variables de entorno
+
+etc/enviroment
+
+** MAN 
+
+ En la sección SINOPSIS se siguen los siguientes convenios que pueden servir de guía para otras secciones.
+
+       texto en negrita   debe teclear esto exactamente.
+       texto en cursiva   reemplace esto por el argumento apropiado.
+       [-abc]             uno o todos los argumentos entre corchetes son opcionales.
+       -a|-b              las opciones separadas por | no pueden usarse conjuntamente.
+       argumento ...      argumento es repetible.
+       [expresión] ...    la expresión entre corchetes completa es repetible.
+
+** Servicios corriendo en la máquina
+
+man etc/service
+
+
+** Crear usuario y grupo
+
+sudo useradd -m -U oracle
+
+sudo useradd -g oracle -m -U oracle
+
+sudo usermod -s /bin/bash/ oracle
+
+** Procesos del sistema
+
+Comprueba los procesos que tienes funcionando en tu servidor
+
+systemctl list-units --all --type=service --no-pager
+systemctl list-units --all --state=active (solo los activos)
+systemctl list-units --all --state=inactive (solo los inactivos)
+
+** ps 
+
+ps (lista los procesos activos)
+
+EJEMPLOS
+
+       To see every process on the system using standard syntax:
+
+          ps -e
+          ps -ef
+          ps -eF
+          ps -ely
+
+       To see every process on the system using BSD syntax:
+
+          ps ax
+          ps axu
+
+       To print a process tree:
+
+          ps -ejH
+          ps axjf
+
+       To get info about threads:
+
+          ps -eLf
+          ps axms
+
+       To get security info:
+
+          ps -eo euser,ruser,suser,fuser,f,comm,label
+          ps -axZ
+          ps -eM
+
+       To see every process running as root (real & effective ID) in user format:
+
+          ps -U root -u root u
+
+       To see every process with a user-defined format:
+
+          ps -eo pid,tid,class,rtprio,ni,pri,psr,pcpu,stat,wchan:14,comm
+          ps axo stat,euid,ruid,tty,tpgid,sess,pgrp,ppid,pid,pcpu,comm
+          ps -Ao pid,tt,user,fname,tmout,f,wchan
+
+        Print only the process IDs of syslogd:
+
+          ps -C syslogd -o pid=
+
+	Print only the name of PID 42:
+
+          ps -q 42 -o comm=
+
+kill -9 <process ID> (mata el proceso del ID indicado)
+
+** top (muestra los procesos en tiempo real)
+
+top 
+
+Buscar los procesos (servicios) de tu máquina que contengan el nombre mysql.
+
+systemctl list-units *mysql* --type=service
+
+
+** Buscar dentro de los archivos
+
+grep 
+
+grep -i '\[es\]' examples.desktop (con -i no distingue entre may. y min.)
+
+\ escapa caracteres
+
+Con comillas francesas ejecuta lo que contengan ´comando´
+
+
+*** Cómo habilitar root en Ubuntu
+
+Los que deseen tener root habilitado es simple, con 2 comandos podremos hacerlo.
+
+sudo -i
+
+Esto nos permitirá acceder como root, claro, luego de que pongamos el password de nuestro usuario.
+
+sudo passwd root
+
+Esto nos cambiará el password del usuario root, y listo … ya podemos presionar Ctrl+F1 y poner como usuario root y como password el que acabamos de especificar.
+
+*** Cómo deshabilitar root en Ubuntu
+
+sudo passwd -dl root
+
+*** Activar SSH
+
+sudo apt update
+sudo apt upgrade -y
+sudo apt install -y ssh
+sudo nano /etc/ssh/ssh_config (descomentar línea PORT 22)
+
+sudo systemctl start sshd.service (iniciar el servicio SSH)
+sudo systemctl stop sshd.service (detener el servicio SSH)
+sudo systemctl restart sshd.service (reiniciar el servicio SSH)
+sudo systemctl enable sshd (para que el servicio inicie con el sistema)
+sudo systemctl status sshd.service (Verificar que el servicio esta activo)
+
+** Compresión / Descompresión
+
+tar -zcvf nombre_archivo_comprimido.tar.gz /ruta_carpeta_comprimir
+
+Comprimir
+
+-z: Comprimir archivos usando gzip.
+-c: Crear un nuevo archivo.
+-v: Verbose, es decir, mostrar el proceso durante la creacion del archivo.
+-f: nombre de archivo.
+
+tar -zcvf home.tar.gz /home
+
+Descomprimir
+
+tar -xvf archivo.tar.gz
+
+Donde:
+
+-x: extrae el contenido del archivo comprimido.
+-v: Verbose, es decir, mostrar el proceso durante la creacion del archivo
+-f: nombre de archivo
+
+Ver contenido:
+
+tar --list -f <nombre_archivo>
+
+
+$ (cd sourcedir; tar -cf <nombre> .) | (cd targetdir; tar -xpf <nombre>)
+
+$ tar -C sourcedir -cf <nombre> . | tar -C targetdir -xpf <nombre>
+
+--file=hostname:/dev/file-name (conexión remota)
+
+
+** Bash scripts
+
+#!/bin/bash
+
+
+
+
+
+
+
+
+
+
+
